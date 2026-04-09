@@ -1,13 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const Card = () => {
+const Card = ({ detail }) => {
+  const [imageLoaded, setImageLoaded] = useState(false)
+  
   return (
-    <>
-      <div className='w-[300px] h-[400px] shadow-[#676767] shadow-[0_5px_25px] bg-[#333333] border-4 border-white flex items-center justify-center text-center p-5'>
-        <h1 className='text-2xl font-bold tracking-wide'>This is a card component</h1>
+    <a 
+      href={detail.url} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className='block group transform transition duration-300 hover:scale-105'
+    >
+      <div className='relative rounded-xl overflow-hidden bg-gray-700 shadow-lg hover:shadow-2xl transition-shadow duration-300'>
+        {/* Loading Skeleton */}
+        {!imageLoaded && (
+          <div className='absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 animate-pulse'></div>
+        )}
+        
+        {/* Image */}
+        <img 
+          className='w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110'
+          src={detail.download_url} 
+          alt={detail.author || "Gallery image"}
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+        />
+
+        {/* Overlay on Hover */}
+        <div className='absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex items-end'>
+          <div className='w-full p-3 text-white transform translate-y-full group-hover:translate-y-0 transition duration-300'>
+            <p className='text-sm font-semibold truncate'>{detail.author || 'Unknown'}</p>
+          </div>
+        </div>
       </div>
-    </>
+    </a>
   )
 }
 
-export default Card
+export default React.memo(Card)
